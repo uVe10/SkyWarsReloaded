@@ -21,8 +21,11 @@ public class PlayerJoinListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(final PlayerJoinEvent event) {
-
         final Player player = event.getPlayer();
+
+        if(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().get("hearts."+player.getUniqueId()) != null){
+            player.setHealthScale(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().getInt("hearts."+player.getUniqueId()+".health"));
+        }
 
         new BukkitRunnable() {
             @Override

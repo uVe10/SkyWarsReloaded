@@ -22,6 +22,8 @@ import com.walrusone.skywarsreloaded.utilities.Util;
 import com.walrusone.skywarsreloaded.utilities.VaultUtils;
 import dev.norska.lsc.LifestealCore;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
@@ -673,7 +675,15 @@ public class MatchManager {
                             VaultUtils.get().give(pWinner, multiplier * SkyWarsReloaded.getCfg().getWinnerEco());
                         }
                         //SUMAMOS UN CORAZON CUANDO GANA EL GAME.
-                        LifestealCore.getInstance().getAPI().addPlayerHearts(pWinner.getUniqueId(), 2);
+                        Player player = Bukkit.getPlayer(UUID.fromString(winnerData.getId()));
+                        player.sendMessage("ADD 1 HEART TO "+player.getName()+" FOR WINNING");
+                        player.setHealthScale(player.getHealthScale()+2);
+                        player.sendMessage("YOUR HEALTH "+player.getHealth()+" NEW");
+                        FileConfiguration config = SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration();
+                        config.set("hearts."+player.getUniqueId()+".name", player.getName());
+                        config.set("hearts."+player.getUniqueId()+".health", player.getHealthScale());
+                        SkyWarsReloaded.get().getConfigUtil().saveConfig();
+
 
                         WinSoundOption sound = (WinSoundOption) WinSoundOption.getPlayerOptionByKey(winnerData.getWinSound());
                         if (sound != null) {

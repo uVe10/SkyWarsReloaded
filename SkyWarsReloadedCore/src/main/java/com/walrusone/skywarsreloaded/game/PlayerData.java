@@ -4,13 +4,11 @@ import com.walrusone.skywarsreloaded.SkyWarsReloaded;
 import com.walrusone.skywarsreloaded.managers.PlayerStat;
 import com.walrusone.skywarsreloaded.utilities.Tagged;
 import com.walrusone.skywarsreloaded.utilities.Util;
-import dev.norska.lsc.LifestealCore;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -114,13 +112,15 @@ public class PlayerData {
             this.locationBeforeRespawn = player.getLocation();
             Util.get().respawnPlayer(player);
             // Set health
-            player.setHealth(healthBeforeGame);
-
+            //player.setHealth(healthBeforeGame);
             // Other data to reset
             player.setFoodLevel(foodBeforeGame);
             player.setSaturation(saturationBeforeGame);
             player.resetPlayerTime();
             player.resetPlayerWeather();
+            if(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().get("hearts."+player.getUniqueId()) != null){
+                player.setHealthScale(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().getInt("hearts."+player.getUniqueId()+".health"));
+            }
             // We set flying to false later when moving back to lobby
             player.setAllowFlight(true);
             player.setFlying(true);

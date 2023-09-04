@@ -175,12 +175,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>net.minidev</groupId>
-            <artifactId>json-smart</artifactId>
-            <version>1.1.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.github.dumptruckman</groupId>
             <artifactId>JsonConfiguration</artifactId>
             <version>b02c3bedf0</version>
@@ -191,6 +185,13 @@
             <artifactId>json-smart</artifactId>
             <version>1.3.3</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sarry20.lib</groupId>
+            <artifactId>sarryAPI</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/SarryAPI.jar</systemPath>
         </dependency>
     </dependencies>
 

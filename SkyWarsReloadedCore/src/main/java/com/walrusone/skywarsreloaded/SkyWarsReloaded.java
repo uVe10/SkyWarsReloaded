@@ -5,6 +5,7 @@ import com.google.common.collect.Iterables;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import com.sarry20.lib.data.ConfigHelper;
 import com.walrusone.skywarsreloaded.api.SkywarsReloadedAPI;
 import com.walrusone.skywarsreloaded.api.impl.SkywarsReloadedImpl;
 import com.walrusone.skywarsreloaded.commands.*;
@@ -88,9 +89,14 @@ public class SkyWarsReloaded extends JavaPlugin implements PluginMessageListener
     private GCNTUpdater updater;
     private boolean extensionCompatible = false;
     private boolean extensionHasCompatCheck = false;
+    private ConfigHelper configUtil;
 
     public static SkyWarsReloaded get() {
         return instance;
+    }
+
+    public ConfigHelper getConfigUtil() {
+        return configUtil;
     }
 
     public static SkywarsReloadedAPI getAPI() {
@@ -166,6 +172,9 @@ public class SkyWarsReloaded extends JavaPlugin implements PluginMessageListener
         // NMS Init
         String packageName = this.getServer().getClass().getPackage().getName();
         String version = packageName.substring(packageName.lastIndexOf('.') + 1);
+
+        configUtil = new ConfigHelper("plugins//SkywarsReloaded//hearts.yml");
+        configUtil.saveConfig();
 
         try {
             final Class<?> clazz = Class.forName("com.walrusone.skywarsreloaded.nms." + version + ".NMSHandler");

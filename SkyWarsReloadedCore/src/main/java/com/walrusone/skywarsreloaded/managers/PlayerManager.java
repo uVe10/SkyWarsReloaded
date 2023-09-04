@@ -17,8 +17,9 @@ import com.walrusone.skywarsreloaded.utilities.Messaging;
 import com.walrusone.skywarsreloaded.utilities.Tagged;
 import com.walrusone.skywarsreloaded.utilities.Util;
 import com.walrusone.skywarsreloaded.utilities.VaultUtils;
-import dev.norska.lsc.LifestealCore;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
@@ -316,8 +317,6 @@ public class PlayerManager {
             Bukkit.getPluginManager().callEvent(new SkyWarsDeathEvent(playerRemoved, deathCause, gameMap, taggerPlayer));
             // Process killer (if exists)
             if (wasKilledByTagger) {
-                //RESTA UN CORAZON CUANDO GANA EL GAME.
-                LifestealCore.getInstance().getAPI().removePlayerHearts(playerRemoved.getUniqueId(), 2, false);
                 this.updateStatsForKiller(taggerPlayer);
                 gameMap.increaseDisplayedKillsVar(taggerPlayer);
                 Bukkit.getPluginManager().callEvent(new SkyWarsKillEvent(taggerPlayer, playerRemoved, gameMap));
@@ -329,7 +328,6 @@ public class PlayerManager {
         gameMap.removePlayer(pUuid);
         if (SkyWarsReloaded.getCfg().spectateEnable() && removeReason.equals(PlayerRemoveReason.DEATH)) {
             this.addSpectator(gameMap, playerRemoved);
-            shouldSendToLobby = false;
         }
         // Remove dead / quit player from other spectator inventories
         this.updateAllSpectatorInventories(gameMap, playerRemoved);
@@ -471,6 +469,16 @@ public class PlayerManager {
         PlayerStat loserData = PlayerStat.getPlayerStats(player.getUniqueId().toString());
         if (loserData != null) {
             loserData.setDeaths(loserData.getDeaths() + 1);
+            //RESTA UN CORAZON CUANDO GANA EL GAME.
+            System.out.println("VICTOOOOOOR: I REMOVE 1 HEART TO "+player.getName()+" FOR LOOSING");
+            player.sendMessage("REMOVE 1 HEART TO "+player.getName()+" FOR LOOSING");
+            player.setHealthScale(player.getHealthScale()-2);
+            player.sendMessage("YOUR HEALTH "+player.getHealth()+" new");
+            FileConfiguration config = SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration();
+            config.set("hearts."+player.getUniqueId()+".name", player.getName());
+            config.set("hearts."+player.getUniqueId()+".health", player.getHealthScale());
+            SkyWarsReloaded.get().getConfigUtil().saveConfig();
+
         }
     }
 
