@@ -470,11 +470,14 @@ public class PlayerManager {
         if (loserData != null) {
             loserData.setDeaths(loserData.getDeaths() + 1);
             //RESTA UN CORAZON CUANDO GANA EL GAME.
-            System.out.println("VICTOOOOOOR: I REMOVE 1 HEART TO "+player.getName()+" FOR LOOSING");
-            player.sendMessage("REMOVE 1 HEART TO "+player.getName()+" FOR LOOSING");
-            player.setHealthScale(player.getHealthScale()-2);
-            player.sendMessage("YOUR HEALTH "+player.getHealth()+" new");
+//            System.out.println("VICTOOOOOOR: I REMOVE 1 HEART TO "+player.getName()+" FOR LOOSING");
+//            player.sendMessage("REMOVE 1 HEART TO "+player.getName()+" FOR LOOSING");
             FileConfiguration config = SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration();
+            if (config.getString("hearts."+player.getUniqueId()) != null)
+                player.setHealthScale(config.getDouble("hearts."+player.getUniqueId()+".health"));
+
+            player.setHealthScale(player.getHealthScale()-2);
+//            player.sendMessage("YOUR HEALTH "+player.getHealth()+" new");
             config.set("hearts."+player.getUniqueId()+".name", player.getName());
             config.set("hearts."+player.getUniqueId()+".health", player.getHealthScale());
             SkyWarsReloaded.get().getConfigUtil().saveConfig();
