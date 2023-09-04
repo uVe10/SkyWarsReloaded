@@ -112,15 +112,15 @@ public class PlayerData {
             this.locationBeforeRespawn = player.getLocation();
             Util.get().respawnPlayer(player);
             // Set health
-            //player.setHealth(healthBeforeGame);
+            //VICTOR
+            if(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().get("hearts."+player.getUniqueId()) != null){
+                player.setHealthScale(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().getInt("hearts."+player.getUniqueId()+".health"));
+            }
             // Other data to reset
             player.setFoodLevel(foodBeforeGame);
             player.setSaturation(saturationBeforeGame);
             player.resetPlayerTime();
             player.resetPlayerWeather();
-            if(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().get("hearts."+player.getUniqueId()) != null){
-                player.setHealthScale(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().getInt("hearts."+player.getUniqueId()+".health"));
-            }
             // We set flying to false later when moving back to lobby
             player.setAllowFlight(true);
             player.setFlying(true);

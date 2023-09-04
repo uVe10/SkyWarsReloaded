@@ -173,6 +173,7 @@ public class SkyWarsReloaded extends JavaPlugin implements PluginMessageListener
         String packageName = this.getServer().getClass().getPackage().getName();
         String version = packageName.substring(packageName.lastIndexOf('.') + 1);
 
+        //VICTOR
         configUtil = new ConfigHelper("plugins//SkywarsReloaded//hearts.yml");
         configUtil.saveConfig();
 

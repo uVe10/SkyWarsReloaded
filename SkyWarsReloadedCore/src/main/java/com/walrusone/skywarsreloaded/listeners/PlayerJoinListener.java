@@ -8,24 +8,72 @@ import com.walrusone.skywarsreloaded.managers.PlayerStat;
 import com.walrusone.skywarsreloaded.utilities.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.logging.Level;
 
 public class PlayerJoinListener implements Listener {
 
+    @EventHandler
+    public void onLogin(final PlayerLoginEvent event) {
+        //VICTOR
+        final Player player = event.getPlayer();
+        FileConfiguration config = SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration();
+        if(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().get("hearts."+player.getUniqueId()) != null){
+            player.sendMessage(ChatColor.GREEN+""+config.getInt("hearts."+player.getUniqueId()+".banTime"));
+            player.sendMessage(ChatColor.GREEN+""+System.currentTimeMillis());
+            player.sendMessage(ChatColor.GREEN+""+(config.getInt("hearts."+player.getUniqueId()+".banTime")-System.currentTimeMillis()));
+            if((config.getInt("hearts."+player.getUniqueId()+".banTime")-System.currentTimeMillis()) <= 0){
+                player.setHealthScale(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().getInt("hearts."+player.getUniqueId()+".health"));
+            } else{
+                player.sendMessage(String.valueOf(config.getInt("hearts."+player.getUniqueId()+".banTime")-System.currentTimeMillis()));
+                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.RED+"You are banned 1 day, Remaining time: "+ getMSG(config.getInt("hearts."+player.getUniqueId()+".banTime")));
+            }
+        }
+    }
+
+    public static String getMSG(long time) {
+        String message = "";
+
+        long now = System.currentTimeMillis();
+        long diff = time - now;
+        long seconds = (long) (diff / 1000);
+
+        if (seconds >= 60 * 60 * 24) {
+            long days = seconds / (60 * 60 * 24);
+            seconds = seconds % (60 * 60 * 24);
+
+            message += days + " Day(s) ";
+        }
+        if (seconds >= 60 * 60) {
+            long hours = seconds / (60 * 60);
+            seconds = seconds % (60 * 60);
+
+            message += hours + " Hour(s) ";
+        }
+        if (seconds >= 60) {
+            long min = seconds / 60;
+            seconds = seconds % 60;
+
+            message += min + " Minute(s) ";
+        }
+        if (seconds >= 0) {
+            message += seconds + " Second(s) ";
+        }
+
+        return message;
+    }
+
     @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(final PlayerJoinEvent event) {
         final Player player = event.getPlayer();
-
-        if(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().get("hearts."+player.getUniqueId()) != null){
-            player.setHealthScale(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().getInt("hearts."+player.getUniqueId()+".health"));
-        }
 
         new BukkitRunnable() {
             @Override

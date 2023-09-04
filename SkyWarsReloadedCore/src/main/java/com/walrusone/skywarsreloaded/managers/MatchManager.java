@@ -674,18 +674,18 @@ public class MatchManager {
                         if (SkyWarsReloaded.getCfg().economyEnabled()) {
                             VaultUtils.get().give(pWinner, multiplier * SkyWarsReloaded.getCfg().getWinnerEco());
                         }
-                        //SUMAMOS UN CORAZON CUANDO GANA EL GAME.
+
+                        //VICTOR
                         Player player = Bukkit.getPlayer(UUID.fromString(winnerData.getId()));
-//                        player.sendMessage("ADD 1 HEART TO "+player.getName()+" FOR WINNING");
                         FileConfiguration config = SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration();
                         if (config.getString("hearts."+player.getUniqueId()) != null)
                             player.setHealthScale(config.getDouble("hearts."+player.getUniqueId()+".health"));
 
                         player.setHealthScale(player.getHealthScale()+2);
 
-//                        player.sendMessage("YOUR HEALTH "+player.getHealth()+" NEW");
                         config.set("hearts."+player.getUniqueId()+".name", player.getName());
                         config.set("hearts."+player.getUniqueId()+".health", player.getHealthScale());
+                        config.set("hearts."+player.getUniqueId()+".banTime", 0);
                         SkyWarsReloaded.get().getConfigUtil().saveConfig();
 
 
