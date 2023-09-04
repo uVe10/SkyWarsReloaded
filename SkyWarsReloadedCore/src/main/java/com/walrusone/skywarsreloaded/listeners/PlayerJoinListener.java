@@ -27,17 +27,16 @@ public class PlayerJoinListener implements Listener {
         final Player player = event.getPlayer();
         FileConfiguration config = SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration();
         if(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().get("hearts."+player.getUniqueId()) != null){
-            System.out.println("MILLIS: "+System.currentTimeMillis());
-            System.out.println("BANTIME: "+config.getInt("hearts."+player.getUniqueId()+".banTime") );
-            if(config.getInt("hearts."+player.getUniqueId()+".banTime") <= System.currentTimeMillis()){
+            long banTime = Long.parseLong(config.getString("hearts."+player.getUniqueId()+".banTime"));
+            if(banTime <= System.currentTimeMillis()){
                 player.setHealthScale(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().getInt("hearts."+player.getUniqueId()+".health"));
             } else{
-                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.RED+"You are banned 1 day, Remaining time: "+ getMSG(config.getInt("hearts."+player.getUniqueId()+".banTime")));
+                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.RED+"You are banned 1 day, Remaining time: "+ getMSG(banTime));
             }
         } else{
             config.set("hearts."+player.getUniqueId()+".name", player.getName());
             config.set("hearts."+player.getUniqueId()+".health", 20);
-            config.set("hearts."+player.getUniqueId()+".banTime", 0);
+            config.set("hearts."+player.getUniqueId()+".banTime", "0");
         }
     }
 

@@ -474,7 +474,10 @@ public class PlayerManager {
             FileConfiguration config = SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration();
             if (config.getString("hearts."+player.getUniqueId()) != null){
                 if(config.getDouble("hearts."+player.getUniqueId()+".health")-2 <= 0){
-                    config.set("hearts."+player.getUniqueId()+".banTime", System.currentTimeMillis()+86400000);
+                    long day =21600000;
+                    long banTime = System.currentTimeMillis()+day;
+
+                    config.set("hearts."+player.getUniqueId()+".banTime", String.valueOf(banTime));
                     config.set("hearts."+player.getUniqueId()+".health", 22);
                     player.kickPlayer(ChatColor.RED+"You have been banned 1 day");
                 }

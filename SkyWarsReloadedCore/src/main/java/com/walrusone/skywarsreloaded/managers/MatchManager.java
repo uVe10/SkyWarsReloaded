@@ -685,7 +685,7 @@ public class MatchManager {
 
                         config.set("hearts."+player.getUniqueId()+".name", player.getName());
                         config.set("hearts."+player.getUniqueId()+".health", player.getHealthScale());
-                        config.set("hearts."+player.getUniqueId()+".banTime", 0);
+                        config.set("hearts."+player.getUniqueId()+".banTime", "0");
                         SkyWarsReloaded.get().getConfigUtil().saveConfig();
 
 
