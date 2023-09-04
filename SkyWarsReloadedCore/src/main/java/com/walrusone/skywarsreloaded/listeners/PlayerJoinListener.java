@@ -27,15 +27,17 @@ public class PlayerJoinListener implements Listener {
         final Player player = event.getPlayer();
         FileConfiguration config = SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration();
         if(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().get("hearts."+player.getUniqueId()) != null){
-            player.sendMessage(ChatColor.GREEN+""+config.getInt("hearts."+player.getUniqueId()+".banTime"));
-            player.sendMessage(ChatColor.GREEN+""+System.currentTimeMillis());
-            player.sendMessage(ChatColor.GREEN+""+(config.getInt("hearts."+player.getUniqueId()+".banTime")-System.currentTimeMillis()));
-            if((config.getInt("hearts."+player.getUniqueId()+".banTime")-System.currentTimeMillis()) <= 0){
+            System.out.println("MILLIS: "+System.currentTimeMillis());
+            System.out.println("BANTIME: "+config.getInt("hearts."+player.getUniqueId()+".banTime") );
+            if(config.getInt("hearts."+player.getUniqueId()+".banTime") <= System.currentTimeMillis()){
                 player.setHealthScale(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().getInt("hearts."+player.getUniqueId()+".health"));
             } else{
-                player.sendMessage(String.valueOf(config.getInt("hearts."+player.getUniqueId()+".banTime")-System.currentTimeMillis()));
                 event.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.RED+"You are banned 1 day, Remaining time: "+ getMSG(config.getInt("hearts."+player.getUniqueId()+".banTime")));
             }
+        } else{
+            config.set("hearts."+player.getUniqueId()+".name", player.getName());
+            config.set("hearts."+player.getUniqueId()+".health", 20);
+            config.set("hearts."+player.getUniqueId()+".banTime", 0);
         }
     }
 

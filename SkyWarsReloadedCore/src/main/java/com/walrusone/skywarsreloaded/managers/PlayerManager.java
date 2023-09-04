@@ -474,15 +474,13 @@ public class PlayerManager {
             FileConfiguration config = SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration();
             if (config.getString("hearts."+player.getUniqueId()) != null){
                 if(config.getDouble("hearts."+player.getUniqueId()+".health")-2 <= 0){
-                    config.set("hearts."+player.getUniqueId()+".banTime", System.currentTimeMillis()+1728000);
-                    player.setHealthScale(20.0);
+                    config.set("hearts."+player.getUniqueId()+".banTime", System.currentTimeMillis()+86400000);
+                    config.set("hearts."+player.getUniqueId()+".health", 22);
                     player.kickPlayer(ChatColor.RED+"You have been banned 1 day");
-                } else {
-                    player.setHealthScale(config.getDouble("hearts."+player.getUniqueId()+".health")-2);
-                    config.set("hearts."+player.getUniqueId()+".name", player.getName());
-                    config.set("hearts."+player.getUniqueId()+".health", player.getHealthScale());
                 }
+                config.set("hearts."+player.getUniqueId()+".health", (config.getDouble("hearts."+player.getUniqueId()+".health")-2));
             }
+            player.setHealthScale(config.getDouble("hearts."+player.getUniqueId()+".health"));
             SkyWarsReloaded.get().getConfigUtil().saveConfig();
 
         }
