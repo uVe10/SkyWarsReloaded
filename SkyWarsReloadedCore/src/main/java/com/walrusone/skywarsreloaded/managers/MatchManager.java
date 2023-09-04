@@ -20,6 +20,7 @@ import com.walrusone.skywarsreloaded.utilities.Messaging;
 import com.walrusone.skywarsreloaded.utilities.Party;
 import com.walrusone.skywarsreloaded.utilities.Util;
 import com.walrusone.skywarsreloaded.utilities.VaultUtils;
+import dev.norska.lsc.LifestealCore;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
@@ -671,6 +672,9 @@ public class MatchManager {
                         if (SkyWarsReloaded.getCfg().economyEnabled()) {
                             VaultUtils.get().give(pWinner, multiplier * SkyWarsReloaded.getCfg().getWinnerEco());
                         }
+                        //SUMAMOS UN CORAZON CUANDO GANA EL GAME.
+                        LifestealCore.getInstance().getAPI().addPlayerHearts(pWinner.getUniqueId(), 2);
+
                         WinSoundOption sound = (WinSoundOption) WinSoundOption.getPlayerOptionByKey(winnerData.getWinSound());
                         if (sound != null) {
                             sound.playSound(pWinner.getLocation());

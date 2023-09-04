@@ -17,6 +17,7 @@ import com.walrusone.skywarsreloaded.utilities.Messaging;
 import com.walrusone.skywarsreloaded.utilities.Tagged;
 import com.walrusone.skywarsreloaded.utilities.Util;
 import com.walrusone.skywarsreloaded.utilities.VaultUtils;
+import dev.norska.lsc.LifestealCore;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -315,6 +316,8 @@ public class PlayerManager {
             Bukkit.getPluginManager().callEvent(new SkyWarsDeathEvent(playerRemoved, deathCause, gameMap, taggerPlayer));
             // Process killer (if exists)
             if (wasKilledByTagger) {
+                //RESTA UN CORAZON CUANDO GANA EL GAME.
+                LifestealCore.getInstance().getAPI().removePlayerHearts(playerRemoved.getUniqueId(), 2, false);
                 this.updateStatsForKiller(taggerPlayer);
                 gameMap.increaseDisplayedKillsVar(taggerPlayer);
                 Bukkit.getPluginManager().callEvent(new SkyWarsKillEvent(taggerPlayer, playerRemoved, gameMap));

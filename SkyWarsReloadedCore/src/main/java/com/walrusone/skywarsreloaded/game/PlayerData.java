@@ -4,6 +4,7 @@ import com.walrusone.skywarsreloaded.SkyWarsReloaded;
 import com.walrusone.skywarsreloaded.managers.PlayerStat;
 import com.walrusone.skywarsreloaded.utilities.Tagged;
 import com.walrusone.skywarsreloaded.utilities.Util;
+import dev.norska.lsc.LifestealCore;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -113,11 +114,8 @@ public class PlayerData {
             this.locationBeforeRespawn = player.getLocation();
             Util.get().respawnPlayer(player);
             // Set health
-            if (healthBeforeGame <= 0 || healthBeforeGame > 20) {
-                player.setHealth(20);
-            } else {
-                player.setHealth(healthBeforeGame);
-            }
+            player.setHealth(healthBeforeGame);
+
             // Other data to reset
             player.setFoodLevel(foodBeforeGame);
             player.setSaturation(saturationBeforeGame);

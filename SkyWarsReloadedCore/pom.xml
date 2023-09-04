@@ -67,16 +67,21 @@
             <url>http://simonsator.de/repo/</url>
         </repository>-->
         <repository>
-            <id>jitpack</id>
-            <url>https://jitpack.io</url>
-        </repository>
-        <repository>
             <id>glaremasters-for-swm-legacy</id>
             <url>https://repo.glaremasters.me/repository/concuncan/</url>
+        </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 
     <dependencies>
+        <dependency>
+            <groupId>com.github.N0RSKA</groupId>
+            <artifactId>LifestealCoreAPI</artifactId>
+            <version>7b</version>
+        </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
@@ -145,12 +150,14 @@
             <version>1.7</version>
             <scope>provided</scope>
         </dependency>
+        <!--  SkyWarsReloaded-Extension
         <dependency>
             <groupId>net.gcnt</groupId>
             <artifactId>SkyWarsReloaded-Extension</artifactId>
-            <version>1.7.10</version>
+            <version>1.7.11</version>
             <scope>provided</scope>
         </dependency>
+        -->
         <dependency>
             <groupId>com.sk89q.worldedit</groupId>
             <artifactId>worldedit-bukkit</artifactId>

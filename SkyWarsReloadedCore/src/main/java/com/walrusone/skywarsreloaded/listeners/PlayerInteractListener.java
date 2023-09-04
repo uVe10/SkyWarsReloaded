@@ -1,6 +1,5 @@
 package com.walrusone.skywarsreloaded.listeners;
 
-import com.google.common.collect.Lists;
 import com.walrusone.skywarsreloaded.SkyWarsReloaded;
 import com.walrusone.skywarsreloaded.enums.ChestPlacementType;
 import com.walrusone.skywarsreloaded.enums.GameType;
@@ -18,9 +17,6 @@ import com.walrusone.skywarsreloaded.utilities.Messaging;
 import com.walrusone.skywarsreloaded.utilities.Party;
 import com.walrusone.skywarsreloaded.utilities.SWRServer;
 import com.walrusone.skywarsreloaded.utilities.Util;
-import me.gaagjescraft.network.team.skywarsreloaded.extension.NoArenaAction;
-import me.gaagjescraft.network.team.skywarsreloaded.extension.SWExtension;
-import me.gaagjescraft.network.team.skywarsreloaded.extension.menus.SingleJoinMenu;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
@@ -34,7 +30,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.inventory.*;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -44,7 +43,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public class PlayerInteractListener implements Listener {
 
@@ -120,6 +118,7 @@ public class PlayerInteractListener implements Listener {
                         event.setCancelled(true);
                         if (SkyWarsReloaded.getIC().has("joinmenu")) {
                             Util.get().playSound(player, event.getPlayer().getLocation(), SkyWarsReloaded.getCfg().getOpenJoinMenuSound(), 1, 1);
+                            /*
                             if (Bukkit.getPluginManager().isPluginEnabled("Skywars-Extension")) {
                                 if (SWExtension.get().getConfig().getBoolean("override_item_join_actions")) {
                                     NoArenaAction action = NoArenaAction.valueOf(SWExtension.get().getConfig().getString("no_arena_specified_action"));
@@ -151,7 +150,9 @@ public class PlayerInteractListener implements Listener {
                                         }
                                     }
                                 }
-                            }
+                                }
+                                */
+
                             if (GameMap.getPlayableArenas(GameType.TEAM).size() == 0) {
                                 if (!SkyWarsReloaded.getIC().hasViewers("joinsinglemenu")) {
                                     new BukkitRunnable() {
@@ -350,7 +351,7 @@ public class PlayerInteractListener implements Listener {
                                     }
                                     player.openInventory(crate.getInventory());
                                     SkyWarsReloaded.get().getServer().getScheduler().runTaskLater(SkyWarsReloaded.get(), () -> {
-                                            SkyWarsReloaded.getNMS().playChestAction(block, true);
+                                        SkyWarsReloaded.getNMS().playChestAction(block, true);
                                     }, 1);
                                     return;
                                 }
@@ -481,8 +482,7 @@ public class PlayerInteractListener implements Listener {
                             }.runTaskLater(SkyWarsReloaded.get(), 2L);
                         }
                         player.sendMessage(new Messaging.MessageFormatter().setVariable("mapname", map.getDisplayName()).format("maps.removeChest"));
-                    }
-                    else if (e.getBlock().getType().equals(Material.DIAMOND_BLOCK)) {
+                    } else if (e.getBlock().getType().equals(Material.DIAMOND_BLOCK)) {
                         // Remove all spawns matching location and collect which ones were removed
                         Map<TeamCard, List<Integer>> result = map.removeSpawnsAtLocation(blockLoc);
 
