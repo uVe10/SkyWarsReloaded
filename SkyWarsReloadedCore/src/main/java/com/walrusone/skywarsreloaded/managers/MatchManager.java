@@ -70,11 +70,10 @@ public class MatchManager {
         boolean wasJoined = false;
 
         Collections.shuffle((games));
-
         for (final GameMap gameMap : games) {
             if (SkyWarsReloaded.getCfg().debugEnabled())
                 Bukkit.getLogger().log(Level.WARNING, "#joinGame: --game: " + gameMap.getName());
-            if (gameMap.canAddPlayer() && gameMap.getPlayerCount() > highest ) {
+            if (gameMap.canAddPlayer() && gameMap.getPlayerCount() > highest && SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().getInt("hearts."+player.getUniqueId()+".tier") >= gameMap.getTier()) {
                 if (SkyWarsReloaded.getCfg().debugEnabled()) {
                     Bukkit.getLogger().log(Level.WARNING, "#joinGame: canAddPlayer: " + gameMap.canAddPlayer());
                     Bukkit.getLogger().log(Level.WARNING, "#joinGame: playerCount: " + gameMap.getPlayerCount());
@@ -82,6 +81,9 @@ public class MatchManager {
                 }
                 map = gameMap;
                 highest = gameMap.getPlayerCount();
+            }else{
+                player.sendMessage(new Messaging.MessageFormatter().format("error.could-not-join3"));
+                return false;
             }
         }
 
@@ -681,10 +683,11 @@ public class MatchManager {
                         if (config.getString("hearts."+player.getUniqueId()) != null)
                             player.setHealthScale(config.getDouble("hearts."+player.getUniqueId()+".health"));
 
-                        player.setHealthScale(player.getHealthScale()+2);
+                        player.setHealthScale(player.getHealthScale()+(config.getDouble("hearts.onWin")*2));
 
                         config.set("hearts."+player.getUniqueId()+".name", player.getName());
                         config.set("hearts."+player.getUniqueId()+".health", player.getHealthScale());
+                        config.set("hearts."+player.getUniqueId()+".tier", SkyWarsReloaded.get().getTier(player.getHealthScale()));
                         config.set("hearts."+player.getUniqueId()+".banTime", "0");
                         SkyWarsReloaded.get().getConfigUtil().saveConfig();
 

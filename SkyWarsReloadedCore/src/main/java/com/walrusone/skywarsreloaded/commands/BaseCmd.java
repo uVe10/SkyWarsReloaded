@@ -28,8 +28,6 @@ public abstract class BaseCmd {
             }
             player = ((Player) sender);
         }
-
-
         if (!Util.get().hasPerm(type, sender, cmdName)) {
             sender.sendMessage(new Messaging.MessageFormatter().format("error.cmd-no-perm"));
         } else if ((maxArgs == -1 && argLength > args.length) || (maxArgs!=-1 && args.length > maxArgs)) {

@@ -11,12 +11,14 @@ import com.walrusone.skywarsreloaded.game.PlayerCard;
 import com.walrusone.skywarsreloaded.game.PlayerData;
 import com.walrusone.skywarsreloaded.game.TeamCard;
 import com.walrusone.skywarsreloaded.game.cages.schematics.SchematicCage;
+import com.walrusone.skywarsreloaded.listeners.PlayerJoinListener;
 import com.walrusone.skywarsreloaded.menus.gameoptions.objects.CoordLoc;
 import com.walrusone.skywarsreloaded.menus.playeroptions.KillSoundOption;
 import com.walrusone.skywarsreloaded.utilities.Messaging;
 import com.walrusone.skywarsreloaded.utilities.Tagged;
 import com.walrusone.skywarsreloaded.utilities.Util;
 import com.walrusone.skywarsreloaded.utilities.VaultUtils;
+import net.md_5.bungee.api.chat.ClickEvent;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -473,15 +475,17 @@ public class PlayerManager {
             //VICTOR.
             FileConfiguration config = SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration();
             if (config.getString("hearts."+player.getUniqueId()) != null){
-                if(config.getDouble("hearts."+player.getUniqueId()+".health")-2 <= 0){
-                    long day =21600000;
+                if(config.getDouble("hearts."+player.getUniqueId()+".health")-(config.getDouble("hearts.onLose")*2) <= 0){
+                    long day = Long.parseLong(config.getString("hearts.banTime"));
                     long banTime = System.currentTimeMillis()+day;
 
                     config.set("hearts."+player.getUniqueId()+".banTime", String.valueOf(banTime));
                     config.set("hearts."+player.getUniqueId()+".health", 22);
-                    player.kickPlayer(ChatColor.RED+"You have been banned 1 day");
+                    player.kickPlayer(ChatColor.RED+"You have been banned for "+ PlayerJoinListener.getMSG(banTime));
                 }
-                config.set("hearts."+player.getUniqueId()+".health", (config.getDouble("hearts."+player.getUniqueId()+".health")-2));
+                double lose = config.getDouble("hearts."+player.getUniqueId()+".health")-(config.getDouble("hearts.onLose")*2);
+                config.set("hearts."+player.getUniqueId()+".health",lose);
+                config.set("hearts."+player.getUniqueId()+".tier", SkyWarsReloaded.get().getTier(lose));
             }
             player.setHealthScale(config.getDouble("hearts."+player.getUniqueId()+".health"));
             SkyWarsReloaded.get().getConfigUtil().saveConfig();
@@ -498,7 +502,7 @@ public class PlayerManager {
             KillSoundOption sound = (KillSoundOption) KillSoundOption.getPlayerOptionByKey(killerData.getKillSound());
 
             //VICTOR
-            killer.setHealthScale(killer.getHealthScale()+2);
+            killer.setHealthScale(killer.getHealthScale()+(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().getDouble("hearts.onKill")*2));
 
             if (sound != null) {
                 sound.playSound(killer.getLocation());

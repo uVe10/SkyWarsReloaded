@@ -31,12 +31,14 @@ public class PlayerJoinListener implements Listener {
             if(banTime <= System.currentTimeMillis()){
                 player.setHealthScale(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().getInt("hearts."+player.getUniqueId()+".health"));
             } else{
-                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.RED+"You are banned 1 day, Remaining time: "+ getMSG(banTime));
+                event.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.RED+"You are banned for: "+ getMSG(banTime) +" more");
             }
         } else{
             config.set("hearts."+player.getUniqueId()+".name", player.getName());
             config.set("hearts."+player.getUniqueId()+".health", 20);
+            config.set("hearts."+player.getUniqueId()+".tier", SkyWarsReloaded.get().getTier(20));
             config.set("hearts."+player.getUniqueId()+".banTime", "0");
+            SkyWarsReloaded.get().getConfigUtil().saveConfig();
         }
     }
 
@@ -71,6 +73,8 @@ public class PlayerJoinListener implements Listener {
 
         return message;
     }
+
+
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(final PlayerJoinEvent event) {

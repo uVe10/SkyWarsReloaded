@@ -67,6 +67,7 @@ public class JoinSingleMenu {
                     String displayName = "";
                     int teamsize = 1;
                     String name = "";
+                    int tier = 1;
                     
                     GameMap gMap = null;
                     SWRServer server = null;
@@ -78,6 +79,7 @@ public class JoinSingleMenu {
                         displayName = gMap.getDisplayName();
                         teamsize = gMap.getTeamSize();
                         name = gMap.getName();
+                        tier = gMap.getTier();
                     }
                     else {
                         server = bungeeGames.get(iii);
@@ -89,7 +91,6 @@ public class JoinSingleMenu {
                         name = server.getServerName();
                     }
 
-                    
 
                     List<String> loreList = Lists.newLinkedList();
                     if (state != MatchState.OFFLINE) {
@@ -102,6 +103,7 @@ public class JoinSingleMenu {
                                                 .replace("{teamsize}", teamsize + "")
                                                 .replace("{aliveplayers}", alivePlayers + "")
                                                 .replace("{name}", name)
+                                                .replace("{tier}", tier + "")
                                 ));
                             }
                         } else if (state.equals(MatchState.PLAYING)) {
@@ -113,6 +115,7 @@ public class JoinSingleMenu {
                                                 .replace("{teamsize}", teamsize + "")
                                                 .replace("{aliveplayers}", alivePlayers + "")
                                                 .replace("{name}", name)
+                                                .replace("{tier}", tier + "")
                                 ));
                             }
                         } else if (state.equals(MatchState.ENDING)) {
@@ -124,6 +127,7 @@ public class JoinSingleMenu {
                                                 .replace("{teamsize}", teamsize + "")
                                                 .replace("{aliveplayers}", alivePlayers + "")
                                                 .replace("{name}", name)
+                                                .replace("{tier}", tier + "")
                                 ));
                             }
                         }
@@ -184,6 +188,7 @@ public class JoinSingleMenu {
                                             .setVariable("teamsize", teamsize + "")
                                             .setVariable("aliveplayers", alivePlayers + "")
                                             .setVariable("name", name)
+                                            .setVariable("tier", tier+"")
                                             .format("menu.join_menu.item_title.waiting-start"))
 
                             );
@@ -196,6 +201,7 @@ public class JoinSingleMenu {
                                                 .setVariable("teamsize", teamsize + "")
                                                 .setVariable("aliveplayers", alivePlayers + "")
                                                 .setVariable("name", name)
+                                                .setVariable("tier", tier+"")
                                                 .format("menu.join_menu.item_title.waiting-start"))
 
                                 );
@@ -209,6 +215,7 @@ public class JoinSingleMenu {
                                                 .setVariable("teamsize", teamsize + "")
                                                 .setVariable("aliveplayers", alivePlayers + "")
                                                 .setVariable("name", name)
+                                                .setVariable("tier", tier+"")
                                                 .format("menu.join_menu.item_title.waiting-start"))
 
                                 );
@@ -222,6 +229,7 @@ public class JoinSingleMenu {
                                                 .setVariable("teamsize", teamsize + "")
                                                 .setVariable("aliveplayers", alivePlayers + "")
                                                 .setVariable("name", name)
+                                                .setVariable("tier", tier+"")
                                                 .format("menu.join_menu.item_title.waiting-start"))
 
                                 );
@@ -315,10 +323,13 @@ public class JoinSingleMenu {
                 } else {
                     if (gMap != null && gMap.canAddPlayer()) {
                         player.closeInventory();
-                        joined = gMap.addPlayers(null, player);
-                        if (!joined) {
-                            player.sendMessage(new Messaging.MessageFormatter().format("error.could-not-join2"));
-                        }
+                        if (SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().getInt("hearts."+player.getUniqueId()+".tier") >= gMap.getTier()){
+                            joined = gMap.addPlayers(null, player);
+                            if (!joined) {
+                                player.sendMessage(new Messaging.MessageFormatter().format("error.could-not-join2"));
+                            }
+                        }else
+                            player.sendMessage(new Messaging.MessageFormatter().format("error.could-not-join3"));
                     }
                     else if (server != null && server.canAddPlayer()) {
                         player.closeInventory();

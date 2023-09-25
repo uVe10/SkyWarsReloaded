@@ -19,8 +19,8 @@ import com.walrusone.skywarsreloaded.game.GameMap;
 import com.walrusone.skywarsreloaded.game.PlayerData;
 import com.walrusone.skywarsreloaded.listeners.*;
 import com.walrusone.skywarsreloaded.managers.*;
-import com.walrusone.skywarsreloaded.managers.worlds.FileWorldManager;
 import com.walrusone.skywarsreloaded.managers.worlds.ASWMWorldManager;
+import com.walrusone.skywarsreloaded.managers.worlds.FileWorldManager;
 import com.walrusone.skywarsreloaded.managers.worlds.LegacySWMWorldManager;
 import com.walrusone.skywarsreloaded.managers.worlds.WorldManager;
 import com.walrusone.skywarsreloaded.menus.*;
@@ -38,6 +38,7 @@ import com.walrusone.skywarsreloaded.utilities.mygcnt.GCNTUpdater;
 import com.walrusone.skywarsreloaded.utilities.placeholders.SWRPlaceholderAPI;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -50,6 +51,8 @@ import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 import java.util.logging.Logger;
 
@@ -90,6 +93,7 @@ public class SkyWarsReloaded extends JavaPlugin implements PluginMessageListener
     private boolean extensionCompatible = false;
     private boolean extensionHasCompatCheck = false;
     private ConfigHelper configUtil;
+    private ConfigHelper tiersUtil;
 
     public static SkyWarsReloaded get() {
         return instance;
@@ -174,8 +178,22 @@ public class SkyWarsReloaded extends JavaPlugin implements PluginMessageListener
         String version = packageName.substring(packageName.lastIndexOf('.') + 1);
 
         //VICTOR
-        configUtil = new ConfigHelper("plugins//SkywarsReloaded//hearts.yml");
-        configUtil.saveConfig();
+        configUtil = new ConfigHelper("plugins//Skywars//hearts.yml");
+        tiersUtil = new ConfigHelper("plugins//Skywars//tiers.yml");
+        if (configUtil.getYamlConfiguration().getDouble("hearts.onWin") == 0) {
+            configUtil.getYamlConfiguration().options().header("banTime are on MILISECONDS, so the seconds u want he gets banned * 1000");
+            configUtil.getYamlConfiguration().set("hearts.onWin", (double) 3);
+            configUtil.getYamlConfiguration().set("hearts.onLose", (double) 4);
+            configUtil.getYamlConfiguration().set("hearts.onKill", (double) 2);
+            configUtil.getYamlConfiguration().set("hearts.banTime", "21600000");
+            configUtil.saveConfig();
+        }
+        if (tiersUtil.getYamlConfiguration().getConfigurationSection("tiers") == null) {
+                tiersUtil.getYamlConfiguration().set("tiers.1.heartsRange", "1-9");
+                tiersUtil.getYamlConfiguration().set("tiers.2.heartsRange", "10-20");
+                tiersUtil.getYamlConfiguration().set("tiers.3.heartsRange", "21-30");
+                tiersUtil.saveConfig();
+        }
 
         try {
             final Class<?> clazz = Class.forName("com.walrusone.skywarsreloaded.nms." + version + ".NMSHandler");
@@ -183,8 +201,9 @@ public class SkyWarsReloaded extends JavaPlugin implements PluginMessageListener
             if (NMS.class.isAssignableFrom(clazz)) { // Make sure it actually implements NMS
                 this.nmsHandler = (NMS) clazz.getConstructor().newInstance(); // Set our handler
             }
-        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException
-                | IllegalArgumentException e) {
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException |
+                 InvocationTargetException
+                 | IllegalArgumentException e) {
             this.getLogger().severe("Could not find support for this CraftBukkit version: " + version + ". Now disabling the plugin!");
             this.getLogger().info("Check for updates at https://gcnt.net/download/skywars");
             this.setEnabled(false);
@@ -751,6 +770,10 @@ public class SkyWarsReloaded extends JavaPlugin implements PluginMessageListener
         return loaded;
     }
 
+    public ConfigHelper getTiersUtil() {
+        return tiersUtil;
+    }
+
     public void checkUpdates() {
         this.updater = new GCNTUpdater();
 
@@ -769,7 +792,7 @@ public class SkyWarsReloaded extends JavaPlugin implements PluginMessageListener
                 Bukkit.getLogger().info(updater.getUpdateURL());
                 Bukkit.getLogger().info("----------------------------------");
             }
-        // Once every hour
+            // Once every hour
         }, 0, 20 * 60 * 60);
     }
 
@@ -798,14 +821,15 @@ public class SkyWarsReloaded extends JavaPlugin implements PluginMessageListener
                 if (foundPatchVer > compatPatchVer) {
                     this.getLogger().warning(String.format(
                             "You are using a newer Skywars-Extension version than expected but should still work (%s). " +
-                            "This message is for debugging purposes. Skywars will attempt to start as normal.",
-                                foundVersion
+                                    "This message is for debugging purposes. Skywars will attempt to start as normal.",
+                            foundVersion
                     ));
 
                     // Allow newer patch versions
                     patchMatch = true;
                 }
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
 
         if (desc.getName().equals("Skywars-Extension") && majorMatch && featureMatch && patchMatch) {
@@ -821,5 +845,21 @@ public class SkyWarsReloaded extends JavaPlugin implements PluginMessageListener
             this.getLogger().severe(String.format(msg, compatibleExtensionVersion, foundVersion));
             return false;
         }
+    }
+    public int getTier(double hearts){
+        hearts = hearts/2;
+        FileConfiguration tiers = SkyWarsReloaded.get().getTiersUtil().getYamlConfiguration();
+        boolean isinbounds;
+        for (String key : tiers.getConfigurationSection("tiers").getKeys(false)) {
+            String range = tiers.getString("tiers."+key+".heartsRange");
+            isinbounds = isInBounds((int) hearts,Integer.parseInt(range.split("-")[0]),Integer.parseInt(range.split("-")[1]));
+            if (isinbounds){
+                return Integer.parseInt(key);
+            }
+        }
+        return 0;
+    }
+    public boolean isInBounds(int num, double lower, double upper) {
+        return lower <= num && num <= upper;
     }
 }

@@ -146,6 +146,7 @@ error:
   spectate-cancelled: '&cTeleportation cancelled!'
   could-not-join: '&cWe were unable to find a SkyWars game for you to join!'
   could-not-join2: '&cYou can''t join that game at this time!'
+  could-not-join3: '&cYou dont have enough tier level to join this game'
   cooldown: '&cYou can''t use your taunt for another &7{timeleft}'
   chestpercent: '&c[percentage] must be a number between 1 and 100!'
   position: '&c[position] must be a number between 0 and 35!'
@@ -246,15 +247,18 @@ menu:
       waiting-start:
         - '&bArena: &7{name}'
         - '&bPlayers: &7{playercount}/{maxplayers}'
+        - '&bTier: &7{tier}'
         - ''
         - '&aClick here to join this game'
       playing:
         - '&bArena: &7{name}'
         - '&bAlive players: {aliveplayers}'
+        - '&bTier: &7{tier}'
         - ''
         - '&cThis game is currently playing'
       ending:
         - '&bArena: &7{name}'
+        - '&bTier: &7{tier}'
         - ''
         - '&cThis game has ended and will now restart'
   usetaunt-menu-title: '&8Taunt Menu'

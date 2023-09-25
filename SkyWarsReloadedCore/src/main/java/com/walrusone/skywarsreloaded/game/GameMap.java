@@ -129,6 +129,7 @@ public class GameMap {
     private boolean customJoinMenuIcon = false;
     private ItemStack customJoinMenuItem = null;
     private CoordLoc waitingLobbySpawn;
+    private int tier;
 
     public GameMap(final String name) {
         this.name = name;
@@ -903,6 +904,7 @@ public class GameMap {
         FileConfiguration fc = YamlConfiguration.loadConfiguration(mapFile);
         fc.set("displayname", displayName);
         fc.set("minplayers", minPlayers);
+        fc.set("tier", tier);
         fc.set("creator", designedBy);
         fc.set("registered", registered);
         fc.set("spectateSpawn", spectateSpawn.getLocationString());
@@ -996,6 +998,7 @@ public class GameMap {
         // Start parse options
         FileConfiguration fc = YamlConfiguration.loadConfiguration(mapFile);
         displayName = fc.getString("displayname", name);
+        tier = fc.getInt("tier");
         designedBy = fc.getString("creator", "");
         registered = fc.getBoolean("registered", false);
         spectateSpawn = Util.get().getCoordLocFromString(fc.getString("spectateSpawn", "0:95:0"));
@@ -2415,4 +2418,12 @@ public class GameMap {
         }
     }
 
+    public int getTier() {
+        return tier;
+    }
+
+    public void setTier(int tier) {
+        this.tier = tier;
+        saveArenaData();
+    }
 }

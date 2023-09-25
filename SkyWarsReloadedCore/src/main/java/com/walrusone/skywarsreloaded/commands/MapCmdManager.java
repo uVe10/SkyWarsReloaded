@@ -30,6 +30,7 @@ public class MapCmdManager implements CommandExecutor, SWRCmdManagerAPI {
         mapcmds.add(new NameCmd("map"));
         mapcmds.add(new DeleteCmd("map"));
         mapcmds.add(new MinimumCmd("map"));
+        mapcmds.add(new TierCmd("map"));
         mapcmds.add(new CreatorCmd("map"));
         mapcmds.add(new DebugCmd("map")); // new
         mapcmds.add(new ArenaCmd("map"));
