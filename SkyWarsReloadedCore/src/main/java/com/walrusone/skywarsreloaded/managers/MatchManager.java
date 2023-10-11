@@ -681,13 +681,13 @@ public class MatchManager {
                         Player player = Bukkit.getPlayer(UUID.fromString(winnerData.getId()));
                         FileConfiguration config = SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration();
                         if (config.getString("hearts."+player.getUniqueId()) != null)
-                            player.setHealthScale(config.getDouble("hearts."+player.getUniqueId()+".health"));
+                            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(config.getDouble("hearts."+player.getUniqueId()+".health"));
 
-                        player.setHealthScale(player.getHealthScale()+(config.getDouble("hearts.onWin")*2));
+                        player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()+(config.getDouble("hearts.onWin")*2));
 
                         config.set("hearts."+player.getUniqueId()+".name", player.getName());
-                        config.set("hearts."+player.getUniqueId()+".health", player.getHealthScale());
-                        config.set("hearts."+player.getUniqueId()+".tier", SkyWarsReloaded.get().getTier(player.getHealthScale()));
+                        config.set("hearts."+player.getUniqueId()+".health", player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue());
+                        config.set("hearts."+player.getUniqueId()+".tier", SkyWarsReloaded.get().getTier(player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()));
                         config.set("hearts."+player.getUniqueId()+".banTime", "0");
                         SkyWarsReloaded.get().getConfigUtil().saveConfig();
 

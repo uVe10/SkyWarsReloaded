@@ -8,6 +8,7 @@ import com.walrusone.skywarsreloaded.managers.PlayerStat;
 import com.walrusone.skywarsreloaded.utilities.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -29,7 +30,7 @@ public class PlayerJoinListener implements Listener {
         if(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().get("hearts."+player.getUniqueId()) != null){
             long banTime = Long.parseLong(config.getString("hearts."+player.getUniqueId()+".banTime"));
             if(banTime <= System.currentTimeMillis()){
-                player.setHealthScale(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().getInt("hearts."+player.getUniqueId()+".health"));
+                player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().getInt("hearts."+player.getUniqueId()+".health"));
             } else{
                 event.disallow(PlayerLoginEvent.Result.KICK_OTHER, ChatColor.RED+"You are banned for: "+ getMSG(banTime) +" more");
             }

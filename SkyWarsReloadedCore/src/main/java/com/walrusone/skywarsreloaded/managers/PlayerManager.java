@@ -487,7 +487,7 @@ public class PlayerManager {
                 config.set("hearts."+player.getUniqueId()+".health",lose);
                 config.set("hearts."+player.getUniqueId()+".tier", SkyWarsReloaded.get().getTier(lose));
             }
-            player.setHealthScale(config.getDouble("hearts."+player.getUniqueId()+".health"));
+            player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(config.getDouble("hearts."+player.getUniqueId()+".health"));
             SkyWarsReloaded.get().getConfigUtil().saveConfig();
 
         }
@@ -502,7 +502,7 @@ public class PlayerManager {
             KillSoundOption sound = (KillSoundOption) KillSoundOption.getPlayerOptionByKey(killerData.getKillSound());
 
             //VICTOR
-            killer.setHealthScale(killer.getHealthScale()+(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().getDouble("hearts.onKill")*2));
+            killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(killer.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()+(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().getDouble("hearts.onKill")*2));
 
             if (sound != null) {
                 sound.playSound(killer.getLocation());

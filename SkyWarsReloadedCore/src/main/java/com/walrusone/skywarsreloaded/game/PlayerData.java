@@ -115,7 +115,7 @@ public class PlayerData {
             // Set health
             //VICTOR
             if(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().get("hearts."+player.getUniqueId()) != null){
-                player.setHealthScale(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().getInt("hearts."+player.getUniqueId()+".health"));
+                player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(SkyWarsReloaded.get().getConfigUtil().getYamlConfiguration().getInt("hearts."+player.getUniqueId()+".health"));
             }
             // Other data to reset
             player.setFoodLevel(foodBeforeGame);
